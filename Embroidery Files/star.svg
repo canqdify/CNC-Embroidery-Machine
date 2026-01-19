@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4.2 (f4327f4, 2025-05-13)"
+   sodipodi:docname="star.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:inkstitch="http://inkstitch.org/namespace">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     inkscape:document-units="mm"
+     inkscape:zoom="0.71891835"
+     inkscape:cx="397.12437"
+     inkscape:cy="558.47789"
+     inkscape:window-width="1920"
+     inkscape:window-height="1009"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <metadata
+     id="metadata1">
+    <inkstitch:min_stitch_len_mm>0.1</inkstitch:min_stitch_len_mm>
+    <inkstitch:collapse_len_mm>3</inkstitch:collapse_len_mm>
+    <inkstitch:inkstitch_svg_version>3</inkstitch:inkstitch_svg_version>
+  </metadata>
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       sodipodi:type="star"
+       style="fill:#fefefe;fill-opacity:1;stroke-width:0.264583"
+       id="path2"
+       inkscape:flatsided="false"
+       sodipodi:sides="5"
+       sodipodi:cx="92.743492"
+       sodipodi:cy="99.736061"
+       sodipodi:r1="55.583458"
+       sodipodi:r2="27.791727"
+       sodipodi:arg1="0.66336605"
+       sodipodi:arg2="1.2916846"
+       inkscape:rounded="0"
+       inkscape:randomized="0"
+       d="m 136.53903,133.96283 -36.13887,-7.51057 -26.674691,25.51249 -4.024553,-36.691 L 37.194168,97.788398 70.845724,82.622679 77.430145,46.303653 102.2525,73.62172 l 36.57615,-4.961039 -18.3105,32.049209 z"
+       inkscape:transform-center-x="2.3279921"
+       inkscape:transform-center-y="-0.28480819"
+       inkstitch:fill_method="legacy_fill"
+       transform="matrix(0.491959 0 0 0.473211 -18.298 -21.9114)" />
+  </g>
+</svg>
