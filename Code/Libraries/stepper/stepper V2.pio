@@ -3,7 +3,7 @@
 ;
 ; TODO: 
 ; - update init programs
-; - check num bits shifted out, will 6 work?
+; - data sent to scratch x from main must be doubled for timing to work
 ;
 
 
@@ -11,9 +11,12 @@
 .program xMove 
 .side_set 1
 .wrap_target
-   out x, 8 side 1
+top:
+   out x, 8 side 1 [1]
 loop:
     jmp x-- loop side 0
+    jmp !osre top
+    irq wait 0
 .wrap
 ; __________________________________
 
@@ -53,10 +56,12 @@ void xMove_program_init(PIO pio, uint sm, uint offset, uint pin, float freq) {
 .program yMove 
 .side_set 1
 .wrap_target
+top:
    out x, 8 side 1 [1]
-   nop side 0
 loop:
-    jmp x-- loop
+    jmp x-- loop side 0
+    jmp !osre top
+    irq wait 1
 .wrap
 ; __________________________________
 
