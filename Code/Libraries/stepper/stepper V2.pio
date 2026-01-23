@@ -2,7 +2,7 @@
 ; New pio program to allow for accel and decel of motors
 ;
 ; TODO: 
-; - update init programs
+; - test
 ; - data sent to scratch x from main must be doubled for timing to work
 ;
 
