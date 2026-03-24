@@ -1,0 +1,90 @@
+; 
+; Generates square wave  for x and y axis motor control
+; Need different programs for each axis due to the fact that each axis needs its own interrupt
+; Code from https://forums.raspberrypi.com/viewtopic.php?t=351767
+; Why reinvent the wheel when you can steal it?
+;
+
+
+; ___________ x program ___________
+.program xMove 
+.wrap_target
+    set x, 31
+loop:
+    out pins, 1
+    jmp x-- loop
+    irq wait 0
+.wrap
+; __________________________________
+
+
+% c-sdk {
+#include "hardware/clocks.h"
+
+
+/*! @brief           inits pio for x motor
+ *  @param pio       the pio running program
+ *  @param sm        state machine
+ *  @param offset    offset calc'd in init
+ *  @param pin       pin used as output
+ *  @param freq      freq for clock div
+ */
+void xMove_program_init(PIO pio, uint sm, uint offset, uint pin, float freq) {
+
+    pio_gpio_init(pio, pin); 
+    pio_sm_set_consecutive_pindirs(pio, sm, pin, 1, true);
+
+    pio_sm_config c = xMove_program_get_default_config(offset);
+    
+    sm_config_set_out_pins(&c, pin, 1);
+    sm_config_set_out_shift(&c, false, true, 32); 
+    
+    sm_config_set_fifo_join(&c, PIO_FIFO_JOIN_TX); //makes the fifo a single 8 entry fifo. How much is an entry? 4 words deep. How much is a word? IDK
+
+    float div = clock_get_hz(clk_sys) / (freq * 4.0 );    
+    sm_config_set_clkdiv(&c, div);                      
+                                                        
+    pio_sm_init(pio, sm, offset, &c);
+}
+
+%}
+
+; ___________ y program ___________
+.program yMove 
+.wrap_target
+    set x, 31
+loop:
+    out pins, 1
+    jmp x-- loop
+    irq wait 1
+.wrap
+; __________________________________
+
+% c-sdk {
+#include "hardware/clocks.h"
+
+/*! @brief           inits pio for y motor
+ *  @param pio       the pio running program
+ *  @param sm        state machine
+ *  @param offset    offset calc'd in init
+ *  @param pin       pin used as output
+ *  @param freq      freq for clock div
+ */
+void yMove_program_init(PIO pio, uint sm, uint offset, uint pin, float freq) {
+
+    pio_gpio_init(pio, pin); 
+    pio_sm_set_consecutive_pindirs(pio, sm, pin, 1, true);
+
+    pio_sm_config c = yMove_program_get_default_config(offset);
+    
+    sm_config_set_out_pins(&c, pin, 1);
+    sm_config_set_out_shift(&c, false, true, 32); 
+    
+    sm_config_set_fifo_join(&c, PIO_FIFO_JOIN_TX); //makes the fifo a single 8 entry fifo. How much is an entry? 4 words deep. How much is a word? IDK
+
+    float div = clock_get_hz(clk_sys) / (freq * 4.0 );    
+    sm_config_set_clkdiv(&c, div);                      
+                                                        
+    pio_sm_init(pio, sm, offset, &c);
+}
+%}

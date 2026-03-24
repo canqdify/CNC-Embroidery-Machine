@@ -1,0 +1,37 @@
+const char styleCss[] = R"rawliteral(
+#mainContainer {
+    display: grid;
+    grid-template-rows: auto; /* Allow title to adjust based on content */
+    grid-template-columns: 1fr 1fr;
+    background-color: aliceblue;
+    height: 100vh; /* Full viewport height */
+}
+.left {
+    padding: 18px;
+    border-radius: 12px;
+    grid-column: 1/2;
+}
+
+/* Right panel (table) */
+.right {
+    padding: 18px;
+    border-radius: 12px;
+    grid-column: 2/2;
+}
+/* Each cell */
+#dataBaseTable td, 
+#dataBaseTable th {
+    border: 1px solid black;
+    padding: 5px;
+}
+
+/* Alternating row colors */
+#dataBaseTable tr:nth-child(odd) {
+    background-color: white;
+}
+
+#dataBaseTable tr:nth-child(even) {
+    background-color: lightgreen;
+}
+)rawliteral";
+
