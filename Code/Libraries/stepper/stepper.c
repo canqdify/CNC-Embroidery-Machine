@@ -19,8 +19,9 @@ uint32_t *getWords(uint steps);
 // library variables
 /////////////////////////////////////////////////////////////////////////////
 
-float freq = 1000.0; // max freq is 1.5 kHz from stopped.
-                     // Driving motor faster requires math to calc accel and decel
+//TODO: confirm this number
+float freq = 1000.0; 
+                     
 
 volatile bool xPioReady = false;
 volatile bool yPioReady = false;
@@ -150,7 +151,7 @@ void moveMotor(Motor *motor)
     dma_channel_set_trans_count(motor->dma_chan, (motor->steps / 32) + 1, true); //and GO
 }
 
-/// @brief  
+/// @brief  Init DMA
 /// dma stuff https://github.com/raspberrypi/pico-examples/blob/master/dma
 void dmaInitXY(void)
 {
@@ -217,27 +218,62 @@ void dma_handler(void)
 
 /// @brief creates array of words for transfer 
 /// @param steps 
-/// @return reference to array
-/// array with pointers https://www.geeksforgeeks.org/c/return-an-array-in-c/
+/// @return reference to array of delay values for 1 stitch
 uint32_t *getWords(uint steps)
 {
-    int n = steps / 16; // can only send 32 bits but sending both on and off signal 
-    uint32_t *arr = malloc((n + 1) * sizeof(uint32_t)); // size is n+1 for remainder 
+    int s_a;
+    int s_b;
+    float prev = 0;
+    float num;
+
+    uint32_t *arr = malloc((steps) * sizeof(uint32_t)); 
     if (arr == NULL) panic_unsupported(); //run screaming for the hills (end execution with msg unsupported)
 
-    for (int i = 0; i < n; i++) arr[i] = 0xAAAAAAAA; //0b 1010 1010 etc
+    // get displacement sections a, b, and c
+    s_a = steps / 4; // sa = sc
+    s_b = s_a * 2;
 
-    // get remainder and fill last position
-    int r = steps % 16;
-    int s = 0; // remainder to be converted to binary steps
-    for(int j = 0; j < r; j++) s += 2 << (2 * j); 
+    //ensure sections are balanced and that the correct number of steps are executed
+    if (steps % 4 == 1) s_b += 1;
+    else if (steps % 4 == 2) s_a += 1;
+    else if (steps % 4 == 3)
+    {
+        s_a += 1;
+        s_b += 1;
+    }
 
-    arr[n] = s;
+    /**************************************************************
+        Must include math.h, update CMake accordingly
+    ***************************************************************/
+   
+    /* 
+        in case I want to do this on multiple lines
+        a = (-9*steps)/(4*pow(pow(STITCH_RATE, -1)))
+        b = (9*steps)/(2*pow(STITCH_RATE, -1))
+        c = (-5/4)*steps -i
+        num = (-1*(b) + sqrt(pow((b),2)-4*(a)*(c)))/(2*(a)) 
+    */
+
+    // fill array with delay values
+    for(int i = 0; i < steps; i++)
+    {
+        if (i < s_a)
+            num = (float)(sqrt((4 * pow(pow(STITCH_RATE, -1), 2) * i) / 9 * steps)) - prev;
+        else if (i < s_a + s_b)
+            num = (float)(((2 * pow(STITCH_RATE, -1) * i) / (3 * steps)) + (steps / 4)) - prev;
+        else // deeply ugly quadratic
+            num = (-1 * ((9 * steps) / (2 * pow(STITCH_RATE, -1))) + sqrt(pow(((9 * steps) / (2 * pow(STITCH_RATE, -1))), 2) - 4 * ((-9 * steps) / (4 * pow(pow(STITCH_RATE, -1)))) * ((-5 / 4) * steps - i))) / (2 * ((-9 * steps) / (4 * pow(pow(STITCH_RATE, -1))))) - prev;
+
+        prev = num;
+        arr[x] = (int)(round(num / 0.000005)) - 2;
+        arr[x] = arr[x] > 255 ? 255 : arr[x];
+    }
+
     return arr;
 }
 
 /// @brief programmatic stop, kills all stitching and resets to ready
-/// @param state addr of the program's state machine 
+/// @param state addr of the program's state machine
 void abort_stitching(Stitching_State *state) //in progress
 {
     //TODO

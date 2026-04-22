@@ -41,6 +41,8 @@
 #define MOTOR_SM_Y 1
 #define MOTOR_DREQ_Y DREQ_PIO0_TX1 //pio0 sm1 tx fifo
 
+#define STITCH_RATE 3 // TODO: test stitch rates with new algo
+
 // sewing machine motor
 // #define MOTOR_STEP_PIN_DRIVER 28 // pico w pin 34
 // #define MOTOR_SM_DRIVER 2
