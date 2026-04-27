@@ -262,11 +262,11 @@ uint32_t *getWords(uint steps)
         else if (i < s_a + s_b)
             num = (float)(((2 * pow(STITCH_RATE, -1) * i) / (3 * steps)) + (steps / 4)) - prev;
         else // deeply ugly quadratic
-            num = (-1 * ((9 * steps) / (2 * pow(STITCH_RATE, -1))) + sqrt(pow(((9 * steps) / (2 * pow(STITCH_RATE, -1))), 2) - 4 * ((-9 * steps) / (4 * pow(pow(STITCH_RATE, -1)))) * ((-5 / 4) * steps - i))) / (2 * ((-9 * steps) / (4 * pow(pow(STITCH_RATE, -1))))) - prev;
+            num = (float)(-1 * ((9 * steps) / (2 * pow(STITCH_RATE, -1))) + sqrt(pow(((9 * steps) / (2 * pow(STITCH_RATE, -1))), 2) - 4 * ((-9 * steps) / (4 * pow(pow(STITCH_RATE, -1)))) * ((-5 / 4) * steps - i))) / (2 * ((-9 * steps) / (4 * pow(pow(STITCH_RATE, -1))))) - prev;
 
         prev = num;
         arr[x] = (int)(round(num / 0.000005)) - 2;
-        arr[x] = arr[x] > 255 ? 255 : arr[x];
+        arr[x] = arr[x] > 255 ? 255 : arr[x]; // Caps delay at 8-bit value
     }
 
     return arr;
